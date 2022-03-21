@@ -16,20 +16,30 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
+            'username' => 'required|string|max:255|unique:users',
         ]);
 
-        $user = User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-        ]);
+        if($validatedData) {
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+             $user = User::create([
+                'name' => $validatedData['name'],
+                'email' => $validatedData['email'],
+                'username' => $validatedData['username'],
+                'password' => Hash::make($validatedData['password']),
+            ]);
 
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-        ]);
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]);
+        } else 
+        {
+            return response()->json([
+                'Error' => $validatedData
+            ]);
+        }
     }
 
     

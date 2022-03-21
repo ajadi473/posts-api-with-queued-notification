@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,8 @@ Route::group([
 
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
+
+    Route::get('feed/posts', [PostsController::class, 'index']);
 });
 
 Route::group([
@@ -38,5 +41,7 @@ Route::group([
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
+
+    
     
 });
