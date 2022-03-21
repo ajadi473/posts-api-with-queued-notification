@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\postLikes;
 use App\Models\posts;
+use App\Models\User;
+use App\Notifications\NewPostNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Notification;
 
 class PostsController extends Controller
 {
@@ -60,7 +63,8 @@ class PostsController extends Controller
                 // 'image' => $this->faker->imageUrl(),
 
             ]);
-
+            $users = User::where('id', '!=',$user_id)->get();
+            Notification::send($users, new NewPostNotification($post));
             return response()->json([
                 'message' => 'Post created successfully',
                 'post' => $post,
