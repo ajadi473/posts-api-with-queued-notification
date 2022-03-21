@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Notification;
 
+use Illuminate\Http\File;
+use Illuminate\Support\Facades\Storage;
+
 class PostsController extends Controller
 {
     /**
@@ -54,17 +57,31 @@ class PostsController extends Controller
 
         $user_id = Auth::id();
         $author = Auth::user()->name;
+        $filename = '';
+
+        $uploadedFile = $request->file('image');
+        if ($uploadedFile) {
+            $filename = time().$uploadedFile->getClientOriginalName();
+
+            Storage::disk('local')->putFileAs(
+                'post-images/'.$filename,
+                $uploadedFile,
+                $filename
+            );
+        }
 
         if($validatedData) {
             $post = posts::create([
                 'author' => $user_id,
                 'description' => $validatedData['description'],
                 'topic' => $validatedData['topic'],
-                // 'image' => $this->faker->imageUrl(),
+                'image' => $filename ? $filename : '',
 
             ]);
+
             $users = User::where('id', '!=',$user_id)->get();
             Notification::send($users, new NewPostNotification($post));
+
             return response()->json([
                 'message' => 'Post created successfully',
                 'post' => $post,
@@ -152,36 +169,30 @@ class PostsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\posts  $posts
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(posts $posts)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\posts  $posts
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, posts $posts)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\posts  $posts
      * @return \Illuminate\Http\Response
      */
-    public function destroy(posts $posts)
+    public function destroy($post)
     {
-        //
+        $user_id = Auth::id();
+
+        $post = posts::where('id',$post)->where('author', $user_id);
+
+        $fetch_post = $post->value('image');
+        
+        $delete_post = $post->delete();
+
+        if ($delete_post) {
+            Storage::disk('local')->deleteDirectory(
+                'post-images/'.$fetch_post
+            );
+
+            return response()->json([
+                'message' => 'Post deleted successfully',
+                'status_code' => Response::HTTP_OK
+            ]);
+        }
     }
 }

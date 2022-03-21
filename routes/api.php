@@ -46,6 +46,8 @@ Route::group([
 
     Route::post('/post/create', [PostsController::class, 'storePost']);
 
+    Route::get('/post/delete/{id}', [PostsController::class, 'destroy']);
+
     Route::post('/post/like/{id}', [PostsController::class, 'likePost']);
 
     Route::post('/post/unlike/{id}', [PostsController::class, 'unlikePost']);
