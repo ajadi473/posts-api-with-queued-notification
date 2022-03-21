@@ -77,10 +77,10 @@ class PostsController extends Controller
 
         if($validatedData) {
             $post = posts::create([
-                'author' => $user_id,
+                'author' => $user_id ? $user_id : $request->author,
                 'description' => $validatedData['description'],
                 'topic' => $validatedData['topic'],
-                'image' => $filename ? $filename : '',
+                'image' => $filename ? $filename : $request->image,
 
             ]);
 
