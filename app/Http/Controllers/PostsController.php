@@ -27,17 +27,22 @@ class PostsController extends Controller
     {
         $posts = posts::orderBy('created_at', 'Desc')->with('postLikeUsers')->paginate(10);
 
-        return \response()->json($posts);
-    }
+        // $posts = posts::select(
+        //     "posts.id", 
+        //     "posts.author",
+        //     "posts.topic", 
+        //     "posts.image", 
+        //     "posts.description", 
+        //     "posts.likes as total_likes_count",
+        //     "posts.created_at", 
+        //     "users.username as author"
+        // )
+        // ->join("users", "users.id", "=", "posts.author")
+        // ->with('postLikeUsers')
+        // ->orderBy('created_at', 'Desc')
+        // ->paginate(10);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return \response()->json($posts);
     }
 
     /**
@@ -94,6 +99,7 @@ class PostsController extends Controller
     public function likePost(Request $request, $id)
     {
         $user_id = Auth::id();
+        $username = Auth::user()->username;
 
         // check if the user has already liked this post...
         $check_post = postLikes::where('post_id', $id)->where('user_id', $user_id)->get();
@@ -106,6 +112,7 @@ class PostsController extends Controller
 
             $post_like = postLikes::create([
                 'post_id' => $id, 
+                'username' => $username,
                 'user_id' => $user_id
             ]);
 
@@ -119,14 +126,13 @@ class PostsController extends Controller
             ]);
         }
 
-
     }
 
     public function unlikePost(Request $request, $id)
     {
         $user_id = Auth::id();
 
-        // check if thee user has actually liked this post...
+        // check if the user has actually liked this post...
         $check_post = postLikes::where('post_id', $id)->where('user_id', $user_id)->get();
         if (count($check_post) > 0) {
 
@@ -146,8 +152,6 @@ class PostsController extends Controller
                 'status_code' => Response::HTTP_BAD_REQUEST
             ]);
         }
-
-
     }
 
     /**

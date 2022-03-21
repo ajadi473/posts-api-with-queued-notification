@@ -24,6 +24,10 @@ return new class extends Migration
             $table->foreign('user_id')
             ->references('id')
             ->on('users');
+            $table->string('username');
+            $table->foreign('username')
+            ->references('username')
+            ->on('users');
             $table->timestamps();
         });
     }
