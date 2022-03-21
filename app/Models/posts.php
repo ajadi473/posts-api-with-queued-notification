@@ -14,7 +14,16 @@ class posts extends Model
     protected $fillable = [
         'author',
         'description',
-        'image',
-        'likes'
+        'image', 
+        'topic',
     ];
+
+    protected $hidden = [
+        'updated_at',
+    ];
+
+    public function postLikeUsers()
+    {
+        return $this->hasMany(postLikes::class, 'post_id', 'id')->take(5);
+    }
 }

@@ -21,7 +21,7 @@ class postsFactory extends Factory
             'author' => $this->faker->name(),
             'description' => $this->faker->text(),
             'image' => $this->faker->imageUrl(),
-            // 'remember_token' => Str::random(10),
+            'topic' => Str::random(10),
         ];
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\User;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
@@ -34,10 +35,10 @@ class AuthController extends Controller
                 'access_token' => $token,
                 'token_type' => 'Bearer',
             ]);
-        } else 
-        {
+        } else {
             return response()->json([
-                'Error' => $validatedData
+                'message' => 'Can not create user',
+                'status_code' => Response::HTTP_NOT_FOUND
             ]);
         }
     }
@@ -48,7 +49,7 @@ class AuthController extends Controller
     {
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
-                'message' => 'Invalid login details'
+                'message' => 'Invalid login details supplied'
             ], 401);
         }
 

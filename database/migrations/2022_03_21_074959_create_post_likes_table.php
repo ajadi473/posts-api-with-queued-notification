@@ -13,15 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-
-            $table->uuid('author');
-            $table->string('topic');
-            $table->string('description');
-            $table->string('image');
-
-            $table->integer('likes')->default(0)->nullable();
+        Schema::create('post_likes', function (Blueprint $table) {
+            $table->id();
+            $table->uuid('post_id');
+            $table->foreign('post_id')
+            ->references('id')
+            ->on('posts')
+            ->onDelete('cascade');
+            $table->uuid('user_id');
+            $table->foreign('user_id')
+            ->references('id')
+            ->on('users');
             $table->timestamps();
         });
     }
@@ -33,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('post_likes');
     }
 };

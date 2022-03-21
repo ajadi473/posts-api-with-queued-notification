@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,8 +41,16 @@ Route::group([
 ], function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
+        // return Auth::user()->name;
     });
 
+    Route::post('/post/create', [PostsController::class, 'storePost']);
+
+    Route::post('/post/like/{id}', [PostsController::class, 'likePost']);
+
+    Route::post('/post/unlike/{id}', [PostsController::class, 'unlikePost']);
+
+    Route::get('/likes/post/{id}', [PostsController::class, 'showPostLikes']);
     
     
 });
