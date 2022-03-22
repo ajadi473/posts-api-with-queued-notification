@@ -18,6 +18,8 @@
 - Send a notification to other users when a new post is added. (Database channel)
 - Automatically delete posts 15 days old.
 
-## Heroku url
+## URL
 
 [Deploy URL](https://posts-api-with-queued-notify.herokuapp.com/).
+
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/16275050-b7066c58-7635-41b9-ab11-20999abbe541?action=collection%2Ffork&collection-url=entityId%3D16275050-b7066c58-7635-41b9-ab11-20999abbe541%26entityType%3Dcollection%26workspaceId%3D678f30c1-c2fe-4f76-b0e4-16bae9f27b68)
